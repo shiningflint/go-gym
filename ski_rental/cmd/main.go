@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+
+	reservation "github.com/shiningflint/go-gym/ski_rental/models"
 )
 
 func menu() {
@@ -44,4 +46,5 @@ func app() {
 
 func main() {
 	app()
+	reservation.NewReservation()
 }
