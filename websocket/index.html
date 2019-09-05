@@ -14,49 +14,72 @@
                 height: 100%;
                 background: gray;
             }
-            #log {
+            .chat-body {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+            .log {
+                flex: 1;
                 background: white;
-                margin: 0;
+                margin: .5rem;
                 padding: 0.5em 0.5em 0.5em 0.5em;
-                position: absolute;
-                top: 0.5em;
-                left: 0.5em;
-                right: 0.5em;
-                bottom: 3em;
                 overflow: auto;
             }
-            #form {
-                padding: 0 0.5em 0 0.5em;
+            .form {
+                height: 50px;
+                padding: .5em;
                 margin: 0;
-                position: absolute;
-                bottom: 1em;
-                left: 0px;
+            }
+            .submit {
+                display: block;
+                margin: 0;
+                margin-bottom: .5rem;
+            }
+            .text {
+                display: block;
                 width: 100%;
-                overflow: hidden;
             }
         </style>
     </head>
     <body>
-    <div id="log"></div>
-    <form id="form">
-        <input type="submit">
-        <input type="text" id="msg" size="64">
-    </form>
+    <div class="chat-body">
+        <div id="log" class="log"></div>
+        <form id="form" class="form">
+            <input type="submit" class="submit">
+            <input type="text" id="msg" size="64" class="text">
+        </form>
+    </div>
     <script type="text/javascript">
     'use strict';
     window.onload = function () {
         let conn;
         const msg = document.getElementById("msg");
         const log = document.getElementById("log");
-        console.log('load completed', msg, log);
+
+        document.getElementById("form").addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (!conn) {
+                return false;
+            }
+            if (!msg.value) {
+                return false;
+            }
+            conn.send(msg.value);
+            msg.value = "";
+        });
 
         if (window["WebSocket"]) {
-            // conn = new WebSocket("ws://" + document.location.host + "/ws");
-            console.log("has websocket!");
+            conn = new WebSocket("ws://" + document.location.host + "/ws");
+
+            conn.addEventListener('message', function (e) {
+                const div = document.createElement('div');
+                div.innerHTML = e.data;
+                log.appendChild(div);
+            })
             console.log(conn);
         } else {
             console.log("no websocket");
-            
         }
     };
     </script>

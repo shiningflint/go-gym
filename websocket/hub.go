@@ -24,3 +24,16 @@ func newHub() *Hub {
 		clients:    make(map[*Client]bool),
 	}
 }
+
+func (h *Hub) run() {
+	for {
+		select {
+		case client := <-h.register:
+			h.clients[client] = true
+		case message := <-h.broadcast:
+			for client := range h.clients {
+				client.send <- message
+			}
+		}
+	}
+}
