@@ -15,7 +15,7 @@ const (
 	writeWait = 10 * time.Second
 
 	// Time allowed to read the next pong message from the peer.
-	pongWait = 60 * time.Second
+	pongWait = 20 * time.Second
 
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
@@ -48,10 +48,16 @@ type Client struct {
 }
 
 func (c *Client) readPump() {
+	defer func() {
+		fmt.Println("closing connection in read pump")
+		c.hub.unregister <- c
+		c.conn.Close()
+	}()
 	c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
-	c.conn.SetPongHandler(func(a string) error {
-		fmt.Println("got pong", a)
+	c.conn.SetPongHandler(func(string) error {
+		fmt.Println("got pong")
+		c.conn.SetReadDeadline(time.Now().Add(pongWait))
 		return nil
 	})
 	for {
