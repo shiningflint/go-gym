@@ -46,27 +46,28 @@
     <div class="chat-body">
         <div id="log" class="log"></div>
         <form id="form" class="form">
-            <input type="submit" class="submit">
-            <input type="text" id="msg" size="64" class="text">
+            <input name="user-id" type="hidden" value="1">
+            <input name="submit" type="submit" class="submit">
+            <input name="message" type="text" id="message" size="64" class="text">
         </form>
     </div>
     <script type="text/javascript">
     'use strict';
     window.onload = function () {
         let conn;
-        const msg = document.getElementById("msg");
         const log = document.getElementById("log");
 
         document.getElementById("form").addEventListener('submit', function (e) {
             e.preventDefault();
-            if (!conn) {
-                return false;
-            }
-            if (!msg.value) {
-                return false;
-            }
-            conn.send(msg.value);
-            msg.value = "";
+            const payload = {
+                message: this.elements['message'].value,
+                'user-id': this.elements['user-id'].value
+            };
+            if (!conn) { return false; }
+            if (!payload['message'] || !payload['user-id']) { return false; }
+
+            conn.send(JSON.stringify(payload));
+            this.elements['message'].value = "";
         });
 
         if (window["WebSocket"]) {
