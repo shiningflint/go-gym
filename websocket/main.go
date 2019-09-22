@@ -7,9 +7,12 @@ import (
 	"net/http"
 
 	"github.com/shiningflint/go-gym/websocket/connection"
+	"github.com/shiningflint/go-gym/websocket/models"
 )
 
 var addr = flag.String("addr", ":8888", "http service address")
+
+var DB = "bananas DB"
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL)
@@ -21,6 +24,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+	models.AllChatMessages()
 	http.ServeFile(w, r, "index.html")
 	return
 }
