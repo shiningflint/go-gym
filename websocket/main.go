@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/shiningflint/go-gym/websocket/connection"
 )
 
 var addr = flag.String("addr", ":8888", "http service address")
@@ -24,6 +26,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	connection.DbConnect()
 	fmt.Println("Server starting on port :8888")
 	hub := newHub()
 	go hub.run()
