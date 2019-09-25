@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -14,8 +15,10 @@ type ChatMessage struct {
 
 // AllChatMessages returns all chat messages
 // from chat_messages table of one chat
-func AllChatMessages() ([]*ChatMessage, error) {
-	rows, err := db.Query("SELECT * FROM chat_messages WHERE chat_id = 1")
+func AllChatMessages(id int) ([]*ChatMessage, error) {
+	rows, err := db.Query(
+		fmt.Sprintf("SELECT * FROM chat_messages WHERE chat_id = %d", id),
+	)
 	if err != nil {
 		return nil, err
 	}

@@ -21,7 +21,11 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	messages, err := models.AllChatMessages()
+	chat, err := models.GetChat(1)
+	if err != nil {
+		log.Fatal(err)
+	}
+	messages, err := models.AllChatMessages(chat.Id)
 	if err != nil {
 		log.Fatal(err)
 	}
