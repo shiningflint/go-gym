@@ -1,16 +1,19 @@
 package models
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 )
 
 type ChatMessage struct {
-	Id        int
-	ChatId    int
-	Message   string
-	CreatedAt string
-	UpdatedAt string
+	Id         int
+	ChatId     int
+	Message    string
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	TimeString string
 }
 
 // AllChatMessages returns all chat messages
@@ -32,8 +35,27 @@ func AllChatMessages(id int) ([]*ChatMessage, error) {
 			log.Fatal(err)
 			return nil, err
 		}
+		msg.TimeString = msg.CreatedAt.Format("15:04")
 		msgs = append(msgs, msg)
 	}
 
 	return msgs, nil
+}
+
+func SaveChatMessage(message []byte) {
+	var data map[string]interface{}
+	msg := new(ChatMessage)
+	if err := json.Unmarshal(message, &data); err != nil {
+		log.Fatal(err)
+	}
+	sqs := `
+	INSERT INTO chat_messages (message, chat_id)
+	VALUES ($1, $2)
+	RETURNING *`
+	err := db.QueryRow(sqs, data["message"].(string), 1).
+		Scan(&msg.Id, &msg.Message, &msg.CreatedAt, &msg.UpdatedAt, &msg.ChatId)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("saved complete!", msg)
 }

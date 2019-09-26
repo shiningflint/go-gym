@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 
@@ -10,6 +11,8 @@ import (
 )
 
 var addr = flag.String("addr", ":8888", "http service address")
+
+var templates = template.Must(template.ParseFiles("index.html"))
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL)
@@ -29,11 +32,11 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	for _, v := range messages {
-		fmt.Println(v.Message)
-	}
 
-	http.ServeFile(w, r, "index.html")
+	err = templates.ExecuteTemplate(w, "index.html", messages)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 	return
 }
 

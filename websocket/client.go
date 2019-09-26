@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/shiningflint/go-gym/websocket/models"
 )
 
 const (
@@ -71,6 +72,7 @@ func (c *Client) readPump() {
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+		models.SaveChatMessage(message)
 		c.hub.broadcast <- message
 	}
 }

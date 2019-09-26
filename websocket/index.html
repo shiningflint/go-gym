@@ -44,7 +44,14 @@
     </head>
     <body>
     <div class="chat-body">
-        <div id="log" class="log"></div>
+        <div id="log" class="log">
+		{{range $m := .}}
+			<div>
+			  <span>{{$m.TimeString}}</span>
+			  <span>{{$m.Message}}</span>
+			</div>
+		{{end}}
+		</div>
         <form id="form" class="form">
             <input name="user-id" type="hidden" value="1">
             <input name="submit" type="submit" class="submit">
