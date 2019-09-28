@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"log"
 	"net/http"
 	"time"
@@ -76,7 +77,11 @@ func (c *Client) readPump() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		c.hub.broadcast <- chmsg
+		pl, err := json.Marshal(chmsg)
+		if err != nil {
+			log.Fatal(err)
+		}
+		c.hub.broadcast <- pl
 	}
 }
 

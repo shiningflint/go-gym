@@ -42,7 +42,7 @@ func AllChatMessages(id int) ([]*ChatMessage, error) {
 	return msgs, nil
 }
 
-func SaveChatMessage(message []byte) ([]byte, error) {
+func SaveChatMessage(message []byte) (*ChatMessage, error) {
 	var data map[string]interface{}
 	msg := new(ChatMessage)
 	if err := json.Unmarshal(message, &data); err != nil {
@@ -58,9 +58,5 @@ func SaveChatMessage(message []byte) ([]byte, error) {
 		return nil, err
 	}
 	msg.TimeString = msg.CreatedAt.Format("15:04")
-	pl, err := json.Marshal(msg)
-	if err != nil {
-		return nil, err
-	}
-	return pl, nil
+	return msg, nil
 }
