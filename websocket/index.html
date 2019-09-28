@@ -46,8 +46,9 @@
     <div class="chat-body">
         <div id="log" class="log">
 		{{range $m := .}}
-			<div>
-			  <span>{{$m.TimeString}}</span>
+			<div style="color: {{$m.Color}}">
+			  <span>[{{$m.TimeString}}]</span>
+			  <span>&lt;{{$m.NickName}}&gt;</span>
 			  <span>{{$m.Message}}</span>
 			</div>
 		{{end}}
@@ -82,9 +83,12 @@
 
             conn.addEventListener('message', function (e) {
 				const data = JSON.parse(e.data)
+				console.log(data)
                 const div = document.createElement('div');
+				div.style = { color: data.Color }
 				div.innerHTML = `
-					<span>${data.TimeString}</span>
+					<span>[${data.TimeString}]</span>
+					<span>&lt;${data.NickName}&gt;</span>
 					<span>${data.Message}</span>`;
                 log.appendChild(div);
             })

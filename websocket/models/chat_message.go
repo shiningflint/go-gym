@@ -14,6 +14,8 @@ type ChatMessage struct {
 	CreatedAt  time.Time `json:"-"`
 	UpdatedAt  time.Time `json:"-"`
 	TimeString string
+	NickName   string
+	Color      string
 }
 
 // AllChatMessages returns all chat messages
@@ -30,7 +32,15 @@ func AllChatMessages(id int) ([]*ChatMessage, error) {
 	var msgs []*ChatMessage
 	for rows.Next() {
 		msg := new(ChatMessage)
-		err = rows.Scan(&msg.Id, &msg.Message, &msg.CreatedAt, &msg.UpdatedAt, &msg.ChatId)
+		err = rows.Scan(
+			&msg.Id,
+			&msg.Message,
+			&msg.CreatedAt,
+			&msg.UpdatedAt,
+			&msg.ChatId,
+			&msg.NickName,
+			&msg.Color,
+		)
 		if err != nil {
 			log.Fatal(err)
 			return nil, err
@@ -53,7 +63,15 @@ func SaveChatMessage(message []byte) (*ChatMessage, error) {
 	VALUES ($1, $2)
 	RETURNING *`
 	err := db.QueryRow(sqs, data["message"].(string), 1).
-		Scan(&msg.Id, &msg.Message, &msg.CreatedAt, &msg.UpdatedAt, &msg.ChatId)
+		Scan(
+			&msg.Id,
+			&msg.Message,
+			&msg.CreatedAt,
+			&msg.UpdatedAt,
+			&msg.ChatId,
+			&msg.NickName,
+			&msg.Color,
+		)
 	if err != nil {
 		return nil, err
 	}
