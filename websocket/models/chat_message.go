@@ -8,11 +8,11 @@ import (
 )
 
 type ChatMessage struct {
-	Id         int
-	ChatId     int
+	Id         int `json:"-"`
+	ChatId     int `json:"-"`
 	Message    string
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
+	CreatedAt  time.Time `json:"-"`
+	UpdatedAt  time.Time `json:"-"`
 	TimeString string
 }
 
@@ -42,11 +42,11 @@ func AllChatMessages(id int) ([]*ChatMessage, error) {
 	return msgs, nil
 }
 
-func SaveChatMessage(message []byte) {
+func SaveChatMessage(message []byte) ([]byte, error) {
 	var data map[string]interface{}
 	msg := new(ChatMessage)
 	if err := json.Unmarshal(message, &data); err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	sqs := `
 	INSERT INTO chat_messages (message, chat_id)
@@ -55,7 +55,12 @@ func SaveChatMessage(message []byte) {
 	err := db.QueryRow(sqs, data["message"].(string), 1).
 		Scan(&msg.Id, &msg.Message, &msg.CreatedAt, &msg.UpdatedAt, &msg.ChatId)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	fmt.Println("saved complete!", msg)
+	msg.TimeString = msg.CreatedAt.Format("15:04")
+	pl, err := json.Marshal(msg)
+	if err != nil {
+		return nil, err
+	}
+	return pl, nil
 }

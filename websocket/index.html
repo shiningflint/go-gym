@@ -81,8 +81,11 @@
             conn = new WebSocket("ws://" + document.location.host + "/ws");
 
             conn.addEventListener('message', function (e) {
+				const data = JSON.parse(e.data)
                 const div = document.createElement('div');
-                div.innerHTML = e.data;
+				div.innerHTML = `
+					<span>${data.TimeString}</span>
+					<span>${data.Message}</span>`;
                 log.appendChild(div);
             })
             console.log(conn);
