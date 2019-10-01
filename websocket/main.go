@@ -46,6 +46,12 @@ func serveChatJs(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "assets/javascripts/chat.js")
 }
 
+func serveChatCss(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.URL)
+	w.Header().Set("Content-Type", "text/css; charset=utf-8")
+	http.ServeFile(w, r, "assets/stylesheets/chat.css")
+}
+
 func main() {
 	models.DbConnect()
 	fmt.Println("Server starting on port :8888")
@@ -56,6 +62,7 @@ func main() {
 		serveWs(hub, w, r)
 	})
 	http.HandleFunc("/assets/javascripts/chat.js", serveChatJs)
+	http.HandleFunc("/assets/stylesheets/chat.css", serveChatCss)
 	err := http.ListenAndServe(*addr, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
