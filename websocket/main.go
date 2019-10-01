@@ -40,6 +40,12 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func serveChatJs(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.URL)
+	w.Header().Set("Content-Type", "text/javascript; charset=utf-8")
+	http.ServeFile(w, r, "assets/javascripts/chat.js")
+}
+
 func main() {
 	models.DbConnect()
 	fmt.Println("Server starting on port :8888")
@@ -49,6 +55,7 @@ func main() {
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
+	http.HandleFunc("/assets/javascripts/chat.js", serveChatJs)
 	err := http.ListenAndServe(*addr, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
