@@ -6,20 +6,26 @@
     </head>
     <body>
     <div class="chat-body">
-        <div id="log" class="log">
-		{{range $m := .}}
-			<div style="color: {{$m.Color}}">
-			  <span>[{{$m.TimeString}}]</span>
-			  <span>&lt;{{$m.NickName}}&gt;</span>
-			  <span>{{$m.Message}}</span>
-			</div>
-		{{end}}
-		</div>
-        <form id="form" class="form">
-            <input name="user-id" type="hidden" value="1">
-            <input name="submit" type="submit" class="submit">
-            <input name="message" type="text" id="message" size="64" class="text">
-        </form>
+      <div class="chat-header">
+        <div class="chat-header-title">Mulakaiwa</div>
+        <div class="chat-header-buttons">
+          <button class="chat-header-button-minimize"></button>
+        </div>
+      </div>
+      <div id="log" class="log">
+      {{range $m := .}}
+        <div style="color: {{$m.Color}}">
+          <span>[{{$m.TimeString}}]</span>
+          <span>&lt;{{$m.NickName}}&gt;</span>
+          <span>{{$m.Message}}</span>
+        </div>
+      {{end}}
+      </div>
+      <form id="form" class="form">
+        <input name="user-id" type="hidden" value="1">
+        <input name="submit" type="submit" class="submit">
+        <input name="message" type="text" id="message" size="64" class="text">
+      </form>
     </div>
     <script type="text/javascript" src="assets/javascripts/chat.js"></script>
     <script type="text/javascript">
