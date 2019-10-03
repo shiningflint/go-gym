@@ -23,8 +23,21 @@
       </div>
       <form id="form" class="form">
         <input name="user-id" type="hidden" value="1">
-        <input name="submit" type="submit" class="submit">
-        <input name="message" type="text" id="message" size="64" class="text">
+        <ul class="chat-tool-bar">
+          <li>
+            <span class="chat-nickname-show">anon</span>
+          </li>
+          <li style="display: none;">
+            <input name="nickname" type="text" value="anon" id="nickname" class="chat-nickname-input" size="6"/>
+          </li>
+          <li>
+            <button class="btn-chat-color" style="background-color: #000000"></button>
+          </li>
+        </ul>
+        <div class="input-bar">
+          <input name="message" type="text" id="message" class="text">
+          <button type="submit" class="btn-send"><u>S</u>end</button>
+        </div>
       </form>
     </div>
     <script type="text/javascript" src="assets/javascripts/chat.js"></script>
