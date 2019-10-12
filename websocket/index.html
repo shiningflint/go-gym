@@ -23,15 +23,16 @@
       </div>
       <form id="form" class="form">
         <input name="user-id" type="hidden" value="1">
+        <input id="color" name="color" type="hidden" value="#000000">
         <ul class="chat-tool-bar">
-          <li>
+          <li id="chat-nickname-show">
             <span class="chat-nickname-show">anon</span>
           </li>
-          <li style="display: none;">
+          <li id="chat-nickname-input" style="display: none;">
             <input name="nickname" type="text" value="anon" id="nickname" class="chat-nickname-input" size="6"/>
           </li>
           <li>
-            <button class="btn-chat-color" style="background-color: #000000"></button>
+            <button type="button" id="btn-chat-color" class="btn-chat-color" style="background-color: #000000"></button>
           </li>
         </ul>
         <div class="input-bar">
