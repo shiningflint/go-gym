@@ -65,15 +65,15 @@ func (c *Client) readPump() {
 		return nil
 	})
 	for {
-		_, message, err := c.conn.ReadMessage()
+		_, jsonString, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
 			}
 			break
 		}
-		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		chmsg, err := models.SaveChatMessage(message)
+		jsonString = bytes.TrimSpace(bytes.Replace(jsonString, newline, space, -1))
+		chmsg, err := models.SaveChatMessage(jsonString)
 		if err != nil {
 			log.Fatal(err)
 		}

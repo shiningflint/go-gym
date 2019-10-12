@@ -52,17 +52,23 @@ func AllChatMessages(id int) ([]*ChatMessage, error) {
 	return msgs, nil
 }
 
-func SaveChatMessage(message []byte) (*ChatMessage, error) {
+func SaveChatMessage(jsonString []byte) (*ChatMessage, error) {
 	var data map[string]interface{}
 	msg := new(ChatMessage)
-	if err := json.Unmarshal(message, &data); err != nil {
+	if err := json.Unmarshal(jsonString, &data); err != nil {
 		return nil, err
 	}
 	sqs := `
-	INSERT INTO chat_messages (message, chat_id)
-	VALUES ($1, $2)
+	INSERT INTO chat_messages (message, chat_id, nickname, color)
+	VALUES ($1, $2, $3, $4)
 	RETURNING *`
-	err := db.QueryRow(sqs, data["message"].(string), 1).
+	err := db.QueryRow(
+		sqs,
+		data["message"].(string),
+		1,
+		data["nickname"].(string),
+		data["color"].(string),
+	).
 		Scan(
 			&msg.Id,
 			&msg.Message,

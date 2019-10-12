@@ -15,7 +15,7 @@ function startChat () {
   conn.addEventListener('message', function (e) {
     const data = JSON.parse(e.data)
     const div = document.createElement('div')
-    div.style = { color: data.Color }
+    div.style.color = data.Color
     div.innerHTML = `
     <span>[${data.TimeString}]</span>
     <span>&lt;${data.NickName}&gt;</span>
@@ -29,7 +29,9 @@ function startChat () {
     if (!conn) { return false }
     if (_stopSendOnInput()) { return false }
     const payload = {
+      color: this.elements['color'].value,
       message: this.elements['message'].value,
+      nickname: this.elements['nickname'].value,
       'user-id': this.elements['user-id'].value
     }
     if (!payload['message'] || !payload['user-id']) { return false }
