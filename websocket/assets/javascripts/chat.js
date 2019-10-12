@@ -1,28 +1,18 @@
 function startChat () {
+  if (!window['WebSocket']) {
+    console.warn('No websocket, fatal starting chat feature.')
+    return false
+  }
+
   _changeNickNameFeature()
   _changeTextColorFeature()
 
-  let conn
+  const conn = new WebSocket("ws://" + document.location.host + "/ws")
   const log = document.getElementById("log")
 
-  document.getElementById("form").addEventListener('submit', function (e) {
-    e.preventDefault()
-    if (_stopSendOnInput()) { return false }
-    const payload = {
-      message: this.elements['message'].value,
-      'user-id': this.elements['user-id'].value
-    }
-    if (!conn) { return false }
-    if (!payload['message'] || !payload['user-id']) { return false }
+  _scrollBottom(log)
 
-    conn.send(JSON.stringify(payload))
-    this.elements['message'].value = ""
-  })
-
-  if (window["WebSocket"]) {
-    conn = new WebSocket("ws://" + document.location.host + "/ws")
-
-    conn.addEventListener('message', function (e) {
+  conn.addEventListener('message', function (e) {
     const data = JSON.parse(e.data)
     const div = document.createElement('div')
     div.style = { color: data.Color }
@@ -31,10 +21,22 @@ function startChat () {
     <span>&lt;${data.NickName}&gt;</span>
     <span>${data.Message}</span>`
     log.appendChild(div)
-    })
-  } else {
-    console.log("no websocket")
-  }
+    _scrollBottom(log)
+  })
+
+  document.getElementById("form").addEventListener('submit', function (e) {
+    e.preventDefault()
+    if (!conn) { return false }
+    if (_stopSendOnInput()) { return false }
+    const payload = {
+      message: this.elements['message'].value,
+      'user-id': this.elements['user-id'].value
+    }
+    if (!payload['message'] || !payload['user-id']) { return false }
+
+    conn.send(JSON.stringify(payload))
+    this.elements['message'].value = ''
+  })
 }
 
 function _stopSendOnInput () {
@@ -82,4 +84,8 @@ function _changeTextColorFeature () {
     elm.value = textColors[nextIndex]
     e.target.style.backgroundColor = textColors[nextIndex]
   })
+}
+
+function _scrollBottom (elm) {
+  elm.scrollTop = elm.scrollHeight
 }
