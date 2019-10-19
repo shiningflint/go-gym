@@ -53,7 +53,6 @@ func serveChatCss(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	fmt.Println("bananas")
 	models.DbConnect()
 	fmt.Println("Server starting on port :8888")
 	hub := newHub()
