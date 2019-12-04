@@ -40,6 +40,11 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func serveTemplate(w http.ResponseWriter, r *http.Request) {
+	log.Println(r.URL)
+	fmt.Println("serve template bananas")
+}
+
 func serveChatJs(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL)
 	w.Header().Set("Content-Type", "text/javascript; charset=utf-8")
@@ -61,6 +66,7 @@ func main() {
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
+	http.HandleFunc("/template", serveTemplate)
 	http.HandleFunc("/assets/javascripts/chat.js", serveChatJs)
 	http.HandleFunc("/assets/stylesheets/chat.css", serveChatCss)
 	err := http.ListenAndServe(*addr, nil)
